@@ -119,10 +119,23 @@
       animation: fadeIn 1.5s ease-in-out;
       min-height: 100vh;
     }
-    .video-container {
-      position: relative;
-      z-index: 1;
-    }
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 999;
+  cursor: pointer;
+}
     .fade-in-image {
       width: 100%;
       max-width: 400px;
@@ -504,16 +517,20 @@
       font-size: 20px;
       color: #c19a6b;
     }
-    /* Menghilangkan kontrol video */
-    video::-webkit-media-controls {
-      display: none !important;
-    }
-    video::-moz-media-controls {
-      display: none !important;
-    }
-    video::-ms-media-controls {
-      display: none !important;
-    }
+/* Hilangkan kontrol video */
+video::-webkit-media-controls {
+  display: none !important;
+}
+video::-moz-media-controls {
+  display: none !important;
+}
+video::-ms-media-controls {
+  display: none !important;
+}
+video[controls]::before,
+video[controls]::after {
+  display: none !important;
+}
   </style>
 </head>
 <body>
@@ -538,19 +555,46 @@
       <!-- Section 1 -->
       <div class="section" data-anchor="walimatul">
         <div class="invitation-box">
-          <video src="aaa.mp4?v=1" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="aaa.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
       </div>
       <!-- Section 2 -->
       <div class="section">
         <div class="verse-box fadeIn">
-          <video src="bb.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="bb.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
       </div>
       <!-- Section 3 -->
       <div class="section">
         <div class="invitation-box">
-          <video src="cc.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="cc.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
         <div id="countdown-container">
           <div>Acara Dimulai: <br>
@@ -564,19 +608,46 @@
       <!-- Section 3-1 -->
       <div class="section">
         <div class="invitation-box">
-          <video src="cc1.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="cc1.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
       </div>
       <!-- Section 3-2 -->
       <div class="section">
         <div class="invitation-box">
-          <video src="cc2.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="cc2.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
       </div>
       <!-- Section 4 -->
       <div class="section">
         <div class="invitation-box">
-          <video src="dd.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="dd.mp4" 
+                  controls="false" 
+                  autoplay 
+                  muted 
+                  playsinline 
+                  loop 
+                  style="width:100%; max-width:400px; border-radius:10px;" 
+                  oncontextmenu="this.controlsList = 'nodownload'; this.removeAttribute('controls'); return false;">
+          </video>
+           <div class="video-overlay" onclick="playVideo(this)"></div>
         </div>
           <a href="https://maps.app.goo.gl/KBmvjHVHysRFZjkm9"  target="_blank" id="location-button" class="countdown-container">
             <span>Klik untuk Lihat Lokasi</span>
@@ -723,6 +794,23 @@ function toggleAudio() {
     // Hapus listener setelah dijalankan sekali
     document.removeEventListener("click", playAudioOnce);
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+  const videos = document.querySelectorAll("video");
+  videos.forEach(video => {
+    video.setAttribute("controlsList", "nodownload");
+    video.removeAttribute("controls");
+    video.style.webkitAppearance = "none"; // Bantu sembunyikan UI default
+  });
+});
+
+function playVideo(container) {
+  const video = container.closest('.video-container').querySelector('video');
+  if (video && video.paused) {
+    video.play();
+    container.style.display = 'none';
+  }
+}
 </script>
 </body>
 </html>
