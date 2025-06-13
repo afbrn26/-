@@ -544,7 +544,7 @@
       <!-- Section 1 -->
       <div class="section" data-anchor="walimatul">
         <div class="invitation-box">
-          <video src="aaa.mp4?v=1" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="aaa.mp4?v=2" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
         </div>
       </div>
       <!-- Section 2 -->
@@ -634,20 +634,20 @@ setTimeout(() => {
     scrollBar: false,
     navigation: false,
     anchors: ['walimatul', 'ayat', 'profil', 'lokasi', 'kehadiran', 'hadiah'],
-    afterLoad: function(origin, destination, direction) {
-      const currentVideo = destination.item.querySelector('video');
-      if (currentVideo) {
-        currentVideo.currentTime = 0;
-        currentVideo.play();
-      }
-    },
-    onLeave: function(origin, destination, direction) {
-      const leavingVideo = origin.item.querySelector('video');
-      if (leavingVideo) {
-        leavingVideo.pause();
-        leavingVideo.currentTime = 0;
-      }
-    }
+afterLoad: function(origin, destination, direction) {
+  const currentVideo = destination.item.querySelector('video');
+  if (currentVideo) {
+    currentVideo.currentTime = 0;
+    currentVideo.play();
+  }
+},
+onLeave: function(origin, destination, direction) {
+  const leavingVideo = origin.item.querySelector('video');
+  if (leavingVideo) {
+    leavingVideo.pause();
+    leavingVideo.currentTime = 0;
+  }
+}
   });
   fullpage_api.moveTo('walimatul', 1);
 }, 100);
@@ -691,6 +691,7 @@ function toggleAudio() {
   const audio = document.getElementById('invitation-audio');
   const icon = document.getElementById('volume-icon');
   if (!audio) return;
+
   if (audio.muted) {
     audio.muted = false;
     icon.classList.replace('fa-volume-mute', 'fa-volume-up');
@@ -708,9 +709,28 @@ document.addEventListener("click", function playAudioOnce() {
       alert("Silakan klik ikon suara untuk putar musik.");
     });
   }
-  // Hapus listener setelah dijalankan sekali
   document.removeEventListener("click", playAudioOnce);
 });
+
+let audioPlayed = false;
+
+function openInvitation() {
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+
+  const audio = document.getElementById('invitation-audio');
+  if (audio && !audioPlayed) {
+    audio.play()
+      .then(() => {
+        audioPlayed = true;
+      })
+      .catch(() => {
+        alert("Silakan klik ikon suara untuk putar musik.");
+      });
+  }
+}
+
+// Fungsi toggleAudio tetap sama seperti di atas
 </script>
 </body>
 </html>
