@@ -52,6 +52,11 @@
       background-repeat: no-repeat;
       background-size: cover;
     }
+
+    .section video {
+  position: relative;
+  z-index: 1;
+}
     .section {
       min-height: 100vh;
       max-width: 100%;
@@ -533,7 +538,7 @@
   <div id="volume-control" title="Klik untuk mute/unmute" onclick="toggleAudio()">
     <i id="volume-icon" class="fas fa-volume-up"></i>
   </div>
-  <audio id="invitation-audio" src="hiya zaujati.mp3" loop></audio>
+  <audio id="invitation-audio" src="hiya zaujati.mp3" loop playsinline></audio>
   <div id="mainContent" class="hidden">
     <div id="fullpage">
       <!-- Section 1 -->
@@ -710,16 +715,16 @@
     }
   }
   // Pastikan audio dimulai setelah interaksi pengguna
-  document.addEventListener("click", function playAudioOnce() {
-    const audio = document.getElementById('invitation-audio');
-    if (audio && !audio.played.length) {
-      audio.play().catch(() => {
-        alert("Silakan klik ikon suara untuk putar musik.");
-      });
-    }
-    // Hapus listener setelah dijalankan sekali
-    document.removeEventListener("click", playAudioOnce);
-  });
+document.addEventListener("click", function playAudioOnce() {
+  const audio = document.getElementById('invitation-audio');
+  if (audio && !audio.played.length) {
+    audio.play().catch(() => {
+      alert("Silakan klik ikon suara untuk putar musik.");
+    });
+  }
+  // Hapus listener setelah dijalankan sekali
+  document.removeEventListener("click", playAudioOnce);
+});
 </script>
 </body>
 </html>
