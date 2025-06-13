@@ -532,7 +532,7 @@
   <div id="volume-control" title="Klik untuk mute/unmute" onclick="toggleAudio()">
     <i id="volume-icon" class="fas fa-volume-up"></i>
   </div>
-  <audio id="invitation-audio" src="hiya zaujati.mp3" loop playsinline></audio>
+  <audio id="invitation-audio" src="hiya zaujati.mp3?v=2" loop playsinline></audio>
   <div id="mainContent" class="hidden">
     <div id="fullpage">
       <!-- Section 1 -->
@@ -596,20 +596,25 @@
   </div>
 <script>
   const sectionVideoPlayed = {}; // Untuk menandai apakah video di section sudah pernah diputar
-  function openInvitation() {
-    document.getElementById('landing').classList.add('hidden');
-    const mainContent = document.getElementById('mainContent');
-    mainContent.classList.remove('hidden');
-    const audio = document.getElementById('invitation-audio');
-    if (audio) {
-      // Pastikan audio dimainkan setelah interaksi pengguna
-      audio.muted = false;
-      audio.play().catch(err => {
-        console.error("Autoplay diblokir oleh browser:", err);
-        alert("Silakan klik ikon suara untuk putar musik.");
-      });
-    }
+  
+let audioPlayed = false;
+
+function openInvitation() {
+  document.getElementById('landing').classList.add('hidden');
+  const mainContent = document.getElementById('mainContent');
+  mainContent.classList.remove('hidden');
+
+  const audio = document.getElementById('invitation-audio');
+  if (audio && !audioPlayed) {
+    audio.muted = false;
+    audio.play().then(() => {
+      audioPlayed = true;
+    }).catch(err => {
+      alert("Silakan klik ikon suara untuk putar musik.");
+      console.error("Autoplay diblokir:", err);
+    });
   }
+}
   // Fungsi untuk mengelola pemutaran video
   function handleVideoPlayback(video) {
     // Memastikan video dimainkan ulang secara otomatis
@@ -630,25 +635,17 @@
       backgroundColor: 'transparent',
       anchors: ['walimatul', 'ayat', 'profil', 'lokasi', 'kehadiran', 'hadiah'],
       afterLoad: function(origin, destination, direction) {
-        const currentSectionId = destination.item.getAttribute("data-anchor");
+        const audio = document.getElementById('invitation-audio');
+        if (audio && !audio.muted && audio.paused) {
+          audio.play().catch(() => {
+            alert("Audio terhenti. Silakan klik ikon suara untuk putar ulang.");
+          });
+        }
+
         const currentVideo = destination.item.querySelector('video');
         if (currentVideo) {
-          if (!sectionVideoPlayed[currentSectionId]) {
-            currentVideo.currentTime = 0;
-            currentVideo.play();
-            currentVideo.onended = () => {
-              currentVideo.pause();
-              currentVideo.currentTime = 0;
-            };
-            sectionVideoPlayed[currentSectionId] = true;
-          } else {
-            currentVideo.currentTime = 0;
-            currentVideo.play();
-            currentVideo.onended = () => {
-              currentVideo.pause();
-              currentVideo.currentTime = 0;
-            };
-          }
+          currentVideo.currentTime = 0;
+          currentVideo.play();
         }
       },
       onLeave: function(origin, destination, direction) {
@@ -696,18 +693,25 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.section').forEach(section => observer.observe(section));
   // Fungsi toggleAudio() untuk mengelola tombol suara
-  function toggleAudio() {
-    const audio = document.getElementById('invitation-audio');
-    const icon = document.getElementById('volume-icon');
-    if (!audio) return;
-    if (audio.muted) {
-      audio.muted = false;
-      icon.classList.replace('fa-volume-mute', 'fa-volume-up');
-    } else {
-      audio.muted = true;
-      icon.classList.replace('fa-volume-up', 'fa-volume-mute');
-    }
+function toggleAudio() {
+  const audio = document.getElementById('invitation-audio');
+  const icon = document.getElementById('volume-icon');
+  if (!audio) return;
+
+  // Jika audio sedang muted, unmute
+  if (audio.muted) {
+    audio.muted = false;
+    icon.classList.replace('fa-volume-mute', 'fa-volume-up');
+    audio.play().catch(err => {
+      console.error("Gagal unmute:", err);
+      alert("Tidak bisa mengaktifkan suara. Silakan coba klik sekali lagi.");
+    });
+  } else {
+    // Jika tidak muted, mute
+    audio.muted = true;
+    icon.classList.replace('fa-volume-up', 'fa-volume-mute');
   }
+}
   // Pastikan audio dimulai setelah interaksi pengguna pertama kali
   document.addEventListener("click", function playAudioOnce() {
     const audio = document.getElementById('invitation-audio');
