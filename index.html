@@ -544,7 +544,7 @@
       <!-- Section 1 -->
       <div class="section" data-anchor="walimatul">
         <div class="invitation-box">
-          <video src="aaa.mp4" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
+          <video src="aaa.mp4?v=1" controls="false" class="fade-in-image" autoplay muted playsinline loop style="width:100%; max-width:400px; border-radius:10px;"></video>
         </div>
       </div>
       <!-- Section 2 -->
@@ -626,47 +626,31 @@
       this.play(); // Mainkan ulang video
     });
   }
-  setTimeout(() => {
-    new fullpage('#fullpage', {
-      autoScrolling: true,
-      fitToSection: true,
-      fitToSectionDelay: 500,
-      scrollBar: false,
-      navigation: false,
-      backgroundColor: 'transparent',
-      anchors: ['walimatul', 'ayat', 'profil', 'lokasi', 'kehadiran', 'hadiah'],
-      afterLoad: function(origin, destination, direction) {
-        const currentSectionId = destination.item.getAttribute("data-anchor");
-        const currentVideo = destination.item.querySelector('video');
-        if (currentVideo) {
-          if (!sectionVideoPlayed[currentSectionId]) {
-            currentVideo.currentTime = 0;
-            currentVideo.play();
-            currentVideo.onended = () => {
-              currentVideo.pause();
-              currentVideo.currentTime = 0;
-            };
-            sectionVideoPlayed[currentSectionId] = true;
-          } else {
-            currentVideo.currentTime = 0;
-            currentVideo.play();
-            currentVideo.onended = () => {
-              currentVideo.pause();
-              currentVideo.currentTime = 0;
-            };
-          }
-        }
-      },
-      onLeave: function(origin, destination, direction) {
-        const leavingVideo = origin.item.querySelector('video');
-        if (leavingVideo) {
-          leavingVideo.pause();
-          leavingVideo.currentTime = 0;
-        }
+setTimeout(() => {
+  new fullpage('#fullpage', {
+    autoScrolling: true,
+    fitToSection: true,
+    fitToSectionDelay: 500,
+    scrollBar: false,
+    navigation: false,
+    anchors: ['walimatul', 'ayat', 'profil', 'lokasi', 'kehadiran', 'hadiah'],
+    afterLoad: function(origin, destination, direction) {
+      const currentVideo = destination.item.querySelector('video');
+      if (currentVideo) {
+        currentVideo.currentTime = 0;
+        currentVideo.play();
       }
-    });
-    fullpage_api.moveTo('walimatul', 1);
-  }, 100);
+    },
+    onLeave: function(origin, destination, direction) {
+      const leavingVideo = origin.item.querySelector('video');
+      if (leavingVideo) {
+        leavingVideo.pause();
+        leavingVideo.currentTime = 0;
+      }
+    }
+  });
+  fullpage_api.moveTo('walimatul', 1);
+}, 100);
   // Countdown Timer
   const countDownDate = new Date("June 21, 2025 08:00:00").getTime();
   setInterval(() => {
@@ -701,20 +685,22 @@
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.section').forEach(section => observer.observe(section));
-  // Fungsi toggle audio manual
-  function toggleAudio() {
-    const audio = document.getElementById('invitation-audio');
-    const icon = document.getElementById('volume-icon');
-    if (!audio) return;
-    if (audio.muted) {
-      audio.muted = false;
-      icon.classList.replace('fa-volume-mute', 'fa-volume-up');
-    } else {
-      audio.muted = true;
-      icon.classList.replace('fa-volume-up', 'fa-volume-mute');
-    }
+
+  // Fungsi toggleAudio() untuk mengelola tombol suara
+function toggleAudio() {
+  const audio = document.getElementById('invitation-audio');
+  const icon = document.getElementById('volume-icon');
+  if (!audio) return;
+  if (audio.muted) {
+    audio.muted = false;
+    icon.classList.replace('fa-volume-mute', 'fa-volume-up');
+  } else {
+    audio.muted = true;
+    icon.classList.replace('fa-volume-up', 'fa-volume-mute');
   }
-  // Pastikan audio dimulai setelah interaksi pengguna
+}
+
+// Pastikan audio dimulai setelah interaksi pengguna pertama kali
 document.addEventListener("click", function playAudioOnce() {
   const audio = document.getElementById('invitation-audio');
   if (audio && !audio.played.length) {
