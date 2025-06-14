@@ -681,8 +681,8 @@ function openInvitation() {
     audio.play().then(() => {
       audioPlayed = true;
     }).catch(err => {
-      alert("Silakan klik ikon suara untuk putar musik.");
       console.error("Autoplay diblokir:", err);
+      // Tidak menampilkan alert
     });
   }
 }
@@ -708,8 +708,8 @@ function openInvitation() {
       afterLoad: function(origin, destination, direction) {
         const audio = document.getElementById('invitation-audio');
         if (audio && !audio.muted && audio.paused) {
-          audio.play().catch(() => {
-            alert;
+          audio.play().catch((err) => {
+            console.warn("Autoplay diblokir atau audio tidak bisa diputar:", err);
           });
         }
 
@@ -787,8 +787,8 @@ function toggleAudio() {
   document.addEventListener("click", function playAudioOnce() {
     const audio = document.getElementById('invitation-audio');
     if (audio && !audio.played.length) {
-      audio.play().catch(() => {
-        alert("Silakan klik ikon suara untuk putar musik.");
+      audio.play().catch((err) => {
+        console.warn("Tidak bisa memainkan musik secara otomatis:", err);
       });
     }
     // Hapus listener setelah dijalankan sekali
