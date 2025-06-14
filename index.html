@@ -708,9 +708,9 @@ function openInvitation() {
       afterLoad: function(origin, destination, direction) {
         const audio = document.getElementById('invitation-audio');
         if (audio && !audio.muted && audio.paused) {
-          audio.play().catch(() => {
-            alert("Audio terhenti. Silakan klik ikon suara untuk putar ulang.");
-          });
+        audio.play().catch(() => {
+          console.warn("Audio terhenti. Silakan klik ikon suara untuk putar ulang.");
+        });
         }
 
         const currentVideo = destination.item.querySelector('video');
